@@ -106,24 +106,24 @@ resource "aws_iam_role" "workernodes" {
   role    = aws_iam_role.workernodes.name
  }
 
-  resource "aws_eks_node_group" "worker-node-group" {
-  cluster_name  = aws_eks_cluster.elliotteks.name
-  node_group_name = "elliotts-eks-workernodes"
-  node_role_arn  = aws_iam_role.workernodes.arn
-  subnet_ids   = [for id in var.public_eks_subnets: id.id]
-  instance_types = ["t2.micro"]
+#   resource "aws_eks_node_group" "worker-node-group" {
+#   cluster_name  = aws_eks_cluster.elliotteks.name
+#   node_group_name = "elliotts-eks-workernodes"
+#   node_role_arn  = aws_iam_role.workernodes.arn
+#   subnet_ids   = [for id in var.public_eks_subnets: id.id]
+#   instance_types = ["t2.micro"]
  
-  scaling_config {
-   desired_size = 1
-   max_size   = 1
-   min_size   = 1
-  }
+#   scaling_config {
+#    desired_size = 1
+#    max_size   = 1
+#    min_size   = 1
+#   }
  
-  depends_on = [
-   aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
-   aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
-  ]
- }
+#   depends_on = [
+#    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+#    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+#   ]
+#  }
 
 
 
