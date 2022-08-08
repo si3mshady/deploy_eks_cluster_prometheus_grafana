@@ -111,7 +111,7 @@ resource "aws_iam_role" "workernodes" {
   node_group_name = "elliotts-eks-workernodes"
   node_role_arn  = aws_iam_role.workernodes.arn
   subnet_ids   = [for id in var.public_eks_subnets: id.id]
-  instance_types = ["t2.small"]
+  instance_types = ["t2.micro"]
  
   scaling_config {
    desired_size = 1
