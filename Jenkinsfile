@@ -48,7 +48,7 @@ pipeline {
                 sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
                 sh("helm repo update")
 
-                sh('helm upgrade -i prometheus-grfana studio-prom prometheus-community/kube-prometheus-stack \
+                sh('helm upgrade -i prometheus-grfana prometheus-community/kube-prometheus-stack \
                     --namespace prometheus \
                     --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"')
                 
