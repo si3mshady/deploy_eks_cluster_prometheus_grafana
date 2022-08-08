@@ -22,7 +22,7 @@ pipeline {
             steps {
             
                 // sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION --fargate" || true)
-                // sh ("terraform destroy --auto-approve")
+                sh ("terraform destroy --auto-approve")
 
               
             }
