@@ -13,7 +13,6 @@ pipeline {
          stage('Test') {
             steps {
                 echo 'Testing..'
-
                 // sh ("terraform init")
                 // sh ("terraform plan")
             }
