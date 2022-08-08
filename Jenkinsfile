@@ -21,7 +21,7 @@ pipeline {
         stage('Build & Deploy') {
             steps {
             
-                // sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION --fargate" || true)
+                // sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION --fargate" || true) 
                 sh ("terraform apply --auto-approve")
                 sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
 
