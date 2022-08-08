@@ -2,7 +2,7 @@ pipeline {
     agent any
 
      parameters {
-    string(name: 'CLUSTER_NAME', defaultValue: 'elliotteks')
+    string(name: 'CLUSTER_NAME', defaultValue: 'elliotteks_fargate')
     string(name: 'ACCOUNT_NUMBER', defaultValue: '780988366548')
     string(name: 'USER_NAME', defaultValue: 'kratos')
     string(name: 'REGION', defaultValue: 'us-west-2')
@@ -22,12 +22,11 @@ pipeline {
             steps {
             
                 // sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION --fargate" || true) 
-                sh ("terraform apply --auto-approve")
+                sh ("terraform destroy --auto-approve")
                 sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
-
                 sh("aws eks update-kubeconfig --name $CLUSTER_NAME --region=$REGION")
                 sh ("sudo sed -i 's/v1alpha1/v1beta1/g' /var/lib/jenkins/.kube/config")
-                // sh ("terraform destroy --auto-approve")
+                // sh ("terraform destroy --auto-approve")e
                 // jenkins ALL=(ALL) NOPASSWD: ALL
               
             }
