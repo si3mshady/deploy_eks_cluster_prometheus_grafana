@@ -21,7 +21,6 @@ pipeline {
         stage('Build & Deploy') {
             steps {
                 
-
                 sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION  || true")
 
                 sh ("eksctl create nodegroup --cluster=$CLUSTER_NAME --name=$CLUSTER_NAME-nodes || true")
