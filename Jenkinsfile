@@ -13,13 +13,18 @@ pipeline {
          stage('Test') {
             steps {
                 echo 'Testing..'
-                sh ("terraform init")
-                sh ("terraform plan")
+
+                // sh ("terraform init")
+                // sh ("terraform plan")
             }
         }
 
         stage('Build & Deploy') {
             steps {
+                
+           
+
+
                 sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION --fargate || true") 
                 // sh ("terraform destroy --auto-approve")
                 sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
@@ -38,9 +43,17 @@ pipeline {
           stage('Install Prometheus and Grafana') {
             steps {
                 echo 'Setting up Monitoring...'
+                sh("kubectl create namespace prometheus")
+
                 sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
                 sh("helm repo update")
-                sh("helm install studio-prom prometheus-community/kube-prometheus-stack")
+
+                sh('helm upgrade -i prometheus-grfana studio-prom prometheus-community/kube-prometheus-stack \
+                    --namespace prometheus \
+                    --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"')
+                
+                
+                // sh("helm install studio-prom prometheus-community/kube-prometheus-stack")
             }
 
 
