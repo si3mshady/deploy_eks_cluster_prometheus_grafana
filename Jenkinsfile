@@ -21,7 +21,7 @@ pipeline {
         stage('Build & Deploy') {
             steps {
               
-                sh ("terraform apply --auto-approve")
+                sh ("terraform destroy --auto-approve")
 
               
             }
