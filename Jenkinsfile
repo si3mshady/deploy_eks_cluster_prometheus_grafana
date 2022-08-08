@@ -43,9 +43,9 @@ pipeline {
           stage('Install Prometheus and Grafana') {
             steps {
                 echo 'Setting up Monitoring...'
-                sh("kubectl create namespace prometheus")
+                sh("kubectl create namespace prometheus || true")
 
-                sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
+                sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true")
                 sh("helm repo update")
 
                 sh('helm upgrade -i prometheus-grfana prometheus-community/kube-prometheus-stack \
