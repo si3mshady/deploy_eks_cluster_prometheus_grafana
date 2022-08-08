@@ -7,6 +7,8 @@ pipeline {
                 echo 'Building..'
 
                 sh ("ls .")
+                sh ("terraform init")
+                sh ("terraform plan")
             }
         }
         stage('Test') {
