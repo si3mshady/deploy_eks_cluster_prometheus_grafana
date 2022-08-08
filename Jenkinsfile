@@ -2,7 +2,7 @@ pipeline {
     agent any
 
      parameters {
-    string(name: 'CLUSTER_NAME', defaultValue: 'elliott-eks-fargate')
+    string(name: 'CLUSTER_NAME', defaultValue: 'elliott-eks-fargate-deux')
     string(name: 'ACCOUNT_NUMBER', defaultValue: '780988366548')
     string(name: 'USER_NAME', defaultValue: 'kratos')
     string(name: 'REGION', defaultValue: 'us-west-2')
