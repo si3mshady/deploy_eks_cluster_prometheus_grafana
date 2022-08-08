@@ -39,7 +39,7 @@ pipeline {
                 echo 'Setting up Monitoring...'
                 sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
                 sh("helm repo update")
-                sh("helm install studio-prom prometheus-community/kube-prometheus-stack")
+                sh("helm install studio-prom-1 prometheus-community/kube-prometheus-stack")
             }
 
 
