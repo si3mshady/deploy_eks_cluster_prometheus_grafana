@@ -23,9 +23,6 @@ pipeline {
               
                 sh ("terraform apply --auto-approve")
 
-                sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
-
-                sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
               
             }
 
@@ -35,9 +32,7 @@ pipeline {
           stage('Install Prometheus and Grafana') {
             steps {
                 echo 'Setting up Monitoring...'
-                sh ("apt upgrade -y")
-                sh ("terraform apply --auto-approve")
-
+             
                 sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
 
                 sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts")
