@@ -4,6 +4,6 @@ output "eks_meta" {
   
 }
 
- output "eks_worker_node_metadata" {
-   value = aws_eks_node_group.worker-node-group
- }
+#  output "eks_worker_node_metadata" {
+#    value = aws_eks_node_group.worker-node-group
+#  }
