@@ -25,7 +25,7 @@ variable "private_k8s_subnets" {
 
 variable "public_subnet_count" {
   type = number
-  default = 2
+  default = 3
 
 }
 
