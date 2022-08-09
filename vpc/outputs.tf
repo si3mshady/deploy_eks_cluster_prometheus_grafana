@@ -19,3 +19,10 @@ output "vpc_public_subnets" {
 output "vpc_private_subnets" {
   value = aws_subnet.private_k8_subnets
 }
+
+
+output "web_bastion_public" {
+
+  value = aws_instance.web-bastion-public
+  
+}

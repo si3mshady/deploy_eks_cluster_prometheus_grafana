@@ -10,6 +10,13 @@ module "rew_relic_monitoring" {
    source               = "./iam"
 }
 
+output "bastion" {
+
+   value = module.vpc.web_bastion_public
+  
+}
+
+
 # module "eks" {
 #     source = "./eks"
 #     private_eks_subnets = module.elliott_sandbox_vpc.vpc_private_subnets
