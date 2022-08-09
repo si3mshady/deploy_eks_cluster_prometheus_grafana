@@ -13,22 +13,22 @@ pipeline {
          stage('Test') {
             steps {
                 echo 'Testing..'
-                // sh ("terraform init")
-                // sh ("terraform plan")
+                sh ("terraform init")
+                sh ("terraform plan")
             }
         }
 
         stage('Build & Deploy') {
             steps {
-                
-                sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION  || true")
+                sh ("terraform apply --auto-approve")
+                // sh("eksctl create cluster --name $CLUSTER_NAME --region $REGION  || true")
 
-                sh ("eksctl create nodegroup --cluster=$CLUSTER_NAME --name=$CLUSTER_NAME-nodes || true")
+                // sh ("eksctl create nodegroup --cluster=$CLUSTER_NAME --name=$CLUSTER_NAME-nodes || true")
  
-                // sh ("terraform destroy --auto-approve")
-                sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
-                sh("aws eks update-kubeconfig --name $CLUSTER_NAME --region=$REGION")
-                sh ("sudo sed -i 's/v1alpha1/v1beta1/g' /var/lib/jenkins/.kube/config")
+                
+                // sh("eksctl create iamidentitymapping --cluster  $CLUSTER_NAME --region=$REGION --arn arn:aws:iam::$ACCOUNT_NUMBER:user/$USER_NAME --group system:masters --username $USER_NAME")
+                // sh("aws eks update-kubeconfig --name $CLUSTER_NAME --region=$REGION")
+                // sh ("sudo sed -i 's/v1alpha1/v1beta1/g' /var/lib/jenkins/.kube/config")
                 // sh ("terraform destroy --auto-approve")e
                 // jenkins ALL=(ALL) NOPASSWD: ALL
               
@@ -42,14 +42,14 @@ pipeline {
           stage('Install Prometheus and Grafana') {
             steps {
                 echo 'Setting up Monitoring...'
-                sh("kubectl create namespace prometheus || true")
+                // sh("kubectl create namespace prometheus || true")
 
-                sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true")
-                sh("helm repo update")
+                // sh("helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true")
+                // sh("helm repo update")
 
-                sh('helm upgrade -i prometheus-grfana prometheus-community/kube-prometheus-stack \
-                    --namespace prometheus \
-                    --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"')
+                // sh('helm upgrade -i prometheus-grfana prometheus-community/kube-prometheus-stack \
+                //     --namespace prometheus \
+                //     --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"')
                 
                 
                 // sh("helm install studio-prom prometheus-community/kube-prometheus-stack")

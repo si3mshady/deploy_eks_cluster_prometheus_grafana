@@ -10,11 +10,11 @@ module "rew_relic_monitoring" {
    source               = "./iam"
 }
 
-module "eks" {
-    source = "./eks"
-    private_eks_subnets = module.elliott_sandbox_vpc.vpc_private_subnets
-    public_eks_subnets = module.elliott_sandbox_vpc.vpc_public_subnets
-    vpc_id = module.elliott_sandbox_vpc.elliot_vpc_id
-    eks_security_group = module.elliott_sandbox_vpc.elliot_public_sg
-}
+# module "eks" {
+#     source = "./eks"
+#     private_eks_subnets = module.elliott_sandbox_vpc.vpc_private_subnets
+#     public_eks_subnets = module.elliott_sandbox_vpc.vpc_public_subnets
+#     vpc_id = module.elliott_sandbox_vpc.elliot_vpc_id
+#     eks_security_group = module.elliott_sandbox_vpc.elliot_public_sg
+# }
 

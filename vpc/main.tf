@@ -146,107 +146,114 @@ resource "aws_security_group" "referenced_sg" {
 
 
 
-# data "aws_ami" "ubuntu" {
-#   most_recent = true
-# }
+data "aws_ami" "ubuntu" {
+  most_recent = true
+}
 
-# resource "aws_key_pair" "elliot_public_key" {
-#   key_name   = "el-public-key"
-#   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyhsApEqGuHOae0YTC90AK8a/Jx5PxUez0UoISKwLpb1625yq15D74Pu7jK0h2SFezZVIOYDnGMokeI0Lr4uj66/mj5T14YJx3wrx2DyvD9JSVSQsWtxngAFfWrfZsdaAR/q3zFILZzNXkRSsuPlw5jQilQzirKZ3Dq7USK5xU2jI6PBxFfp8kmWYhlUCD4w2Z7O/za43tdBUxwGQquTCGJxrzGuJcknwPIsnLgobSF1vkymqtEuvtBlNTAlzu99o0viZ4K9N57K3Qw7mKKjZNg/imboyEMtAyKDahjovF+TYvxArwonnCw38tuBVXBQGuOMsVW/a+YaagdOb9E1LlUf2G2yfwrDmdypsdJdQCq0OhFkbX3V6gHHcMPTfoTwAR+3jZlqTqBOy6vmu/VCg/AaTzG0HJDholsRo9ThY42ytlzQrJFKKeLueQDWzPS5zPV7zOrkbqGjZP00t6XbGnqGTdVCNtmPZrk2q+H4NYhlqMSrr08j/EDyIOncJOHP8="
-# }
+resource "aws_key_pair" "elliot_public_key" {
+  key_name   = "el-public-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDboh6RNEjkyjmG2qZe5l+8caS2tQz8L/2n/1XPgdHjrlW7O2bO6tWgqeBz7YLEFocGeNpkUe4Apd+lMT5+6AS/aEUGhxpYYApIcBAASvy0MgMFyyOke7nUBq6yIQa4CKmATFK4MNX/7RpsDsnCjKLSOpcihHeXl3Hr+ROwICYlhH9tOY7G60Rean74wbGGvlppjiCkNB+PJG80ZL8GEhTFpQjQrybeYLETnzux7ARQNkulwTkee2WV2Fex46MVSJi2eiXWlvKIGX/eCfWrLVXQGyXeV7ZmfZ8cOnx6iVVODiFVBHFX7uDyBlGouNrq72ghHKxHBykfC8TPuLgjs6T4lP+ejWocJ4TsnVm8fWMtY0UliNlYU0zm+sSpVsaJV/X9M+kWXksDVuQBgHkNe8WPsHY4ZvmxBmVEKm+/YxCMpUfKumgXUV58dK5MgfUTuKp644T0sXMq9x6jbc8DIEP62ZAZkRvZnO+mKW84+C6RVqv2cQkGg212ON/om7U62DM= elliottarnold@Elliotts-Air.attlocal.net"
+}
 
 
-# resource "aws_instance" "web-bastion-public" {
-#   ami           = "ami-05e18b6e52b45091e"
-#   instance_type = "t3.micro"
-#   associate_public_ip_address = true
+resource "aws_instance" "web-bastion-public" {
+  ami           = "ami-05e18b6e52b45091e"
+  instance_type = "t3.micro"
+  associate_public_ip_address = true
   
-#   vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
-#   subnet_id = aws_subnet.public_k8_subnets[0].id
-#   key_name =  aws_key_pair.elliot_public_key.key_name
-#   tags = {
-#     Name = "Public-Bastion"
-#   }
-# }
+  vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
+  subnet_id = aws_subnet.public_k8_subnets[0].id
+  key_name =  aws_key_pair.elliot_public_key.key_name
+  tags = {
+    Name = "Public-Bastion"
+  }
 
 
-# resource "aws_instance" "web-bastion-private" {
-#   ami           = "ami-05e18b6e52b45091e"
-#   instance_type = "t3.micro"
-#   associate_public_ip_address = false
+   user_data = <<EOF
+    #!/bin/bash
+    curl -sfL https://get.k3s.io | sh -s - server \
+    --tls-san=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) 
+    EOF
+}
+
+
+resource "aws_instance" "web-bastion-private" {
+  ami           = "ami-05e18b6e52b45091e"
+  instance_type = "t3.micro"
+  associate_public_ip_address = false
   
-#   vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
-#   subnet_id = aws_subnet.private_k8_subnets[0].id
-#   key_name =  aws_key_pair.elliot_public_key.key_name
-#   tags = {
-#     Name = "Private-Instance"
-#   }
-# }
+  vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
+  subnet_id = aws_subnet.private_k8_subnets[0].id
+  key_name =  aws_key_pair.elliot_public_key.key_name
+  tags = {
+    Name = "Private-Instance"
+  }
+}
 
 
 
 
-# resource "aws_iam_group_policy" "devops_admin_group" {
-#   name  = "devops_admin_group_policy"
-#   group = aws_iam_group.devops_admin_group.name
+resource "aws_iam_group_policy" "devops_admin_group" {
+  name  = "devops_admin_group_policy"
+  group = aws_iam_group.devops_admin_group.name
 
 
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = [
-#           "*"
-#         ]
-#         Effect   = "Allow"
-#         Resource = "*"
-#       },
-#     ]
-#   })
-# }
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "*"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
 
-# resource "aws_iam_group" "devops_admin_group" {
-#   name = "devops_admin_group"
+resource "aws_iam_group" "devops_admin_group" {
+  name = "devops_admin_group"
   
-# }
+}
 
 
 
 
-# resource "aws_iam_role" "eks-admin" {
-#   name = "eks-admin"
+resource "aws_iam_role" "eks-admin" {
+  name = "eks-admin"
 
 
-#   inline_policy {
-#     name = "admin_inline_policy"
-#    policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action   = ["*"]
-#         Effect   = "Allow"
-#         Resource = "*"
-#       }
-#     ]
-#   })
-#   }
+  inline_policy {
+    name = "admin_inline_policy"
+   policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["*"]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+  }
 
-#   assume_role_policy = <<EOF
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Action": "sts:AssumeRole",
-#       "Principal": {
-#         "AWS": "*"
-#       },
-#       "Effect": "Allow",
-#       "Sid": ""
-#     }
-#   ]
-# }
-# EOF
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
 
 
 
-# }   
+}   
