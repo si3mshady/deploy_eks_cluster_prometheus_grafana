@@ -16,7 +16,6 @@ output "bastion" {
   
 }
 
-
 # module "eks" {
 #     source = "./eks"
 #     private_eks_subnets = module.elliott_sandbox_vpc.vpc_private_subnets
