@@ -171,24 +171,23 @@ resource "aws_instance" "web-bastion-public" {
 
    user_data = <<EOF
     #!/bin/bash
-    curl -sfL https://get.k3s.io | sh -s - server \
-    --tls-san=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) 
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san $(curl http://169.254.169.254/latest/meta-data/public-ipv4)" sh -s -
     EOF
 }
 
 
-resource "aws_instance" "web-bastion-private" {
-  ami           = "ami-05e18b6e52b45091e"
-  instance_type = "t3.micro"
-  associate_public_ip_address = false
+# resource "aws_instance" "web-bastion-private" {
+#   ami           = "ami-05e18b6e52b45091e"
+#   instance_type = "t3.micro"
+#   associate_public_ip_address = false
   
-  vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
-  subnet_id = aws_subnet.private_k8_subnets[0].id
-  key_name =  aws_key_pair.elliot_public_key.key_name
-  tags = {
-    Name = "Private-Instance"
-  }
-}
+#   vpc_security_group_ids = [aws_security_group.public_sg.id, aws_security_group.referenced_sg.id]
+#   subnet_id = aws_subnet.private_k8_subnets[0].id
+#   key_name =  aws_key_pair.elliot_public_key.key_name
+#   tags = {
+#     Name = "Private-Instance"
+#   }
+# }
 
 
 
