@@ -5,7 +5,6 @@ module "vpc" {
    private_k8s_subnets = [for i in range(3, 255, 2) : cidrsubnet(var.vpc_cidr, 10, i)]
 }
 
-
 module "rew_relic_monitoring" {
    source               = "./iam"
 }
